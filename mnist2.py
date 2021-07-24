@@ -47,3 +47,26 @@ X_test_flattened = X_test.reshape(len(X_test), 28*28)
 #building the model
 #first we build a simple neural model with  hidden layers
 
+# Defining the model
+model = tf.keras.Sequential([
+tf.keras.layers.Dense(100, input_shape=(784,), activation='relu'),
+tf.keras.layers.Dense(100, input_shape=(100,),activation='relu'),
+tf.keras.layers.Dense(10, activation='sigmoid')
+])
+model.summary()
+# Compiling the model
+model.compile(optimizer='adam',
+loss='sparse_categorical_crossentropy',
+metrics=['accuracy'])
+
+# Fit the model
+model.fit(X_train_flattened, y_train, batch_size= 128,epochs=5)
+
+# Evaluate the model
+model.evaluate(X_test_flattened,y_test)
+# saving the model
+save_dir = "/results/"
+model_name = 'keras_mnist.h5'
+model.save(model_name)
+model_path = save_dir + model_name
+print('Saved trained model at %s ' % model_path)

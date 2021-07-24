@@ -63,3 +63,4 @@ model.evaluate(X_test_flattened, y_test)
 y_predicted = model.predict(X_test_flattened)
 y_predicted[0]
 print(np.argmax(y_predicted[0]))
+plt.matshow(X_test[0])
