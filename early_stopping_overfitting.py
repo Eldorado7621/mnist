@@ -27,7 +27,6 @@ for index, image in enumerate(images):
     plt.imshow(image.reshape(28,28),cmap='gray')
     plt.show()
 """
-from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
 from tensorflow.keras.optimizers import SGD
 ##Tensorboard as we discussed is for visualisation
@@ -67,3 +66,29 @@ epochs=10,
 validation_data=(X_test, y_test),
 callbacks=[tensorboard_callback],
 )
+
+#adding early stopping
+from tensorflow.keras.callbacks import EarlyStopping
+es = EarlyStopping(monitor='val_loss', mode='min', verbose=1, patience=5)
+
+model3 = Sequential()
+model3.add(Dense(128, activation='relu', input_shape= (784,) ))
+model3.add(Dense(256, activation='relu'))
+model3.add(Dense(128, activation='relu'))
+model3.add(Dense(10, activation='softmax'))
+model3.compile(loss='categorical_crossentropy', optimizer=SGD(lr=0.01), metrics=['accuracy'])
+
+logdir = "logs/" + datetime.now().strftime("%Y%m%d-%H%M%S")
+tensorboard_callback = TensorBoard(log_dir=logdir)
+
+training_history = model3.fit(
+X_train, # input
+y_train, # output
+batch_size = 32,
+verbose = 1, # Suppress chatty output; use Tensorboard instead
+epochs = 10,
+validation_data = (X_test, y_test),
+callbacks = [tensorboard_callback, es],
+)
+ 
+
